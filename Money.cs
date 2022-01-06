@@ -10,12 +10,13 @@ namespace _1k2c_1._5_1_
     {
         private int _grivna;
         private int _kopiyka;
-        private double _dollarCost;
+        static double _dollarCost;
+        public Money(){}
         public Money(int grivna, int kopiyka, double dollarCost)
         {
             Grivna = grivna;
             Kopiyka = kopiyka;
-            DollarCost = dollarCost;
+            DollarCost = 28.9;
         }
         public int Grivna
         {
@@ -32,20 +33,63 @@ namespace _1k2c_1._5_1_
             get => _dollarCost;
             set => _dollarCost = value != 0 ? value : 0;
         }
-
-        public int this[int index]//indexer
+        public int this[int index]
         {
-            get { return _grivna[index]; }
-            set { _grivna[index] = value; }
+            get
+            {
+                switch  (index)
+                {
+                    case 0: return _grivna;
+                    case 1: return _kopiyka;
+                     
+                    default: throw new Exception("неверный индекс");
+                }
+            }
+            set
+            {
+                switch (index)
+                {
+                    case 0:
+                        _grivna = value;
+                        break;
+                    case 1:
+                        _kopiyka = value;
+                        break;      
+                }
+            }
+
+        }
+
+        public static Money operator +(Money mon1, Money mon2)
+        {
+            int b = mon1._kopiyka + mon2._kopiyka;
+            int a = mon1._grivna + mon2._grivna;
+            if (mon1._kopiyka + mon2._kopiyka >= 100)
+            {
+                a = mon1._grivna + mon2._grivna + 1;
+                b = mon1._kopiyka + mon2._kopiyka - 100; 
+            }
+            return new Money (a, b,  _dollarCost);
+        }
+        public static Money operator -(Money mon1, Money mon2)
+        {
+            return new Money(mon1._grivna - mon2._grivna, mon1._kopiyka - mon2._kopiyka, _dollarCost);
+        }
+        public override string ToString() => $"{Grivna} {Kopiyka} {DollarCost}";
+        public double ToDollar()
+        {
+            double dollar = (_grivna + _kopiyka/100) / _dollarCost;
+            return dollar;
+        }
+        public void FromDollar(double dollar)
+        {
+            double total_ = _grivna * _dollarCost;
+             
         }
 
 
-        //public override string ToString() => $"{Grivna} {Kopiyka} {DollarCost}";
-        //public static double ToDollar()
-        //{
 
-        //}
-       
+
     }
 }
 
